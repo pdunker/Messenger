@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
+    <link
+      rel='stylesheet'
+      href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/static/style.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/static/style_home.css"
+    />
+    <title>Platform</title>
+
+  </head>
+
+  <body>
+  
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="container home-container-size">
+      <div class="row">
+
+        <nav class="menu bg-gradient">
+          <ul class="items">
+            <li class="item item-active">
+              <a class="menu-button" href="/home">
+                <i class="fa fa-home" title="Home" aria-hidden="true"></i>
+              </a>
+            </li>
+            <li class="item">
+              <a class="menu-button" href="/inbox">
+                <i class="fa fa-commenting" title="Inbox" aria-hidden="true"></i>
+              </a>
+            </li>
+            <li class="item">
+              <i class="fa fa-user" title="Profile" aria-hidden="true"></i>
+            </li>
+            <li class="item">
+              <i class="fa fa-cog" title="Configurations" aria-hidden="true"></i>
+            </li>
+            <li class="item">
+              <a class="menu-button" href="/logout">
+                <i class="fa fa-sign-out fa-flip-horizontal" title="Logout" aria-hidden="true"></i>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        Name: {{ user.name }} <br>
+        Id: {{ user.id }} <br>
+        Date Created: {{ user.date_created }} <br>
+        Posts: {{ user.posts }} <br>
+        Liked Posts: {{ user.liked_posts }} <br>
+
+      </div> <!-- class="row" -->
+    </div> <!-- class="container home-container-size" -->
+
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='home.js') }}"
+    ></script>
+
+  </body>
+</html>
+

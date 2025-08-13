@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
+    <link
+      rel='stylesheet'
+      href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/static/style.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/static/style_home.css"
+    />
+    <title>Platform</title>
+
+  </head>
+
+  <body>
+  
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="container home-container-size">
+      <div class="row">
+
+        <nav class="menu bg-gradient">
+          <ul class="items">
+            <li class="item item-active">
+              <a class="menu-button" href="/home">
+                <i class="fa fa-home" title="Home" aria-hidden="true"></i>
+              </a>
+            </li>
+            <li class="item">
+              <a class="menu-button" href="/inbox">
+                <i class="fa fa-commenting" title="Inbox" aria-hidden="true"></i>
+              </a>
+            </li>
+            <li class="item">
+              <i class="fa fa-user" title="Profile" aria-hidden="true"></i>
+            </li>
+            <li class="item">
+              <i class="fa fa-cog" title="Configurations" aria-hidden="true"></i>
+            </li>
+            <li class="item">
+              <a class="menu-button" href="/logout">
+                <i class="fa fa-sign-out fa-flip-horizontal" title="Logout" aria-hidden="true"></i>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="board">
+
+          <div class="card">
+            <div class="card-content">
+              <form method="POST">
+                <i class="icon fa fa-smile-o clickable" style="font-size:25pt;" aria-hidden="true"></i>
+                <input name="post" type="text" class="write-post" placeholder="Something useful to post?"/>
+                <button type="submit" class="send fa fa-paper-plane-o"></button>
+              </form>
+            </div>
+          </div>
+
+          {% if posts %}
+              {% for post in posts %}
+          <div class="card">
+            <div class="card-content">
+              <div class="author">
+                <div class="profile-img animated-bg" id="profile_img">
+                  <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="" />
+                </div>
+                <div class="author-info">
+                  <a href="/user/{{ post.user_name }}">
+                    <strong id="name">
+                      {{ post.user_name }}
+                    </strong>
+                  </a>
+                  <small id="date">
+                    {{ get_date_str(post.date) }}
+                  </small>
+                </div>
+              </div>
+              <p class="card-excerpt" id="excerpt">
+                {{ post.text }}
+              </p>
+              <div  onClick="like({{ post.id }})")>
+                <i class="icon fa fa-thumbs-o-up clickable" style="font-size:25pt;" aria-hidden="true"
+                >{{get_len(post.users_liked)}}</i>
+              </div>
+            </div>
+          </div> <!-- class="card" -->
+            {% endfor %}
+          {% endif %}
+
+          <!--
+          <div class="card">
+            <div class="card-content">
+              <div class="author">
+                <div class="profile-img animated-bg" id="profile_img">
+                  <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="" />
+                </div>
+                <div class="author-info">
+                  <strong id="name">
+                    John Doe
+                  </strong>
+                  <small id="date">
+                    Oct 08, 2020
+                  </small>
+                </div>
+              </div>
+              <p class="card-excerpt" id="excerpt">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore perferendis
+              </p>
+            </div>
+          </div> <!-- class="card" -->
+
+        </div> <!-- class="board" -->
+      </div> <!-- class="row" -->
+    </div> <!-- class="container home-container-size" -->
+
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='home.js') }}"
+    ></script>
+
+  </body>
+</html>
+

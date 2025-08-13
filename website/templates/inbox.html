@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
+    <link
+      rel='stylesheet'
+      href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/static/style.css"
+    />
+
+    <title>Platform - Inbox</title>
+
+  </head>
+
+  <body>
+  
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="container home-container-size">
+      <div class="row">
+
+        <nav class="menu bg-gradient">
+          <ul class="items">
+            <li class="item">
+              <a class="menu-button" href="/home">
+                <i class="fa fa-home" title="Home" aria-hidden="true"></i>
+              </a>
+            </li>
+            <li class="item item-active">
+              <a class="menu-button" href="/inbox">
+                <i class="fa fa-commenting" title="Inbox" aria-hidden="true"></i>
+              </a>
+            </li>
+            <li class="item">
+              <i class="fa fa-user" title="Profile" aria-hidden="true"></i>
+            </li>
+            <li class="item">
+              <i class="fa fa-cog" title="Configurations" aria-hidden="true"></i>
+            </li>
+            <li class="item">
+              <a class="menu-button" href="/logout">
+                <i class="fa fa-sign-out fa-flip-horizontal" title="Logout" aria-hidden="true"></i>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <section class="discussions">
+
+          <div class="discussion search">
+            <div class="searchbar">
+              <i class="fa fa-search" aria-hidden="true"></i>
+              <input type="text" placeholder="Search..."></input>
+            </div>
+          </div>
+
+          {% for user in users %}
+            {% set chat_active = '' %}
+            {% if session['chat_user_id'] and user.id == session['chat_user_id'] %}
+              {% set chat_active = 'message-active' %}
+            {% endif %}
+          <div class="discussion {{ chat_active }}" onClick="chat({{ user.id }})">
+            <div class="photo" style="background-image: url(/static/images/user-profile-male.jpg);">
+              <!--<div class="online"></div>-->
+            </div>
+            <div class="desc-contact">
+              <p class="name">{{ user.name }}</p>
+              {% if pvt_chats_last_msgs %} 
+                <p class="message">{{ pvt_chats_last_msgs[user.name] }}</p>
+              {% endif %}
+            </div>
+            {% if pvt_chats_unread[user.name]: %}
+              <div class="new-msg">New!</div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </section>
+
+        {% if not session['chat_user_id'] %}
+
+        <section class="chat">
+          <div class="header-chat">
+            <i class="icon fa fa-envelope-open-o" aria-hidden="true"></i>
+            <p class="name"> Welcome {{ user.name }}</p>
+            <i class="icon clickable fa fa-ellipsis-h right" aria-hidden="true"></i>
+          </div>
+        </section>
+
+        {% else %}
+
+        <section class="chat">
+
+          <div class="header-chat">
+            <i class="icon fa fa-user-o" aria-hidden="true"></i>
+            <p class="name">{{session['chat_user_name']}}</p>
+            <i class="icon clickable fa fa-ellipsis-h right" aria-hidden="true"></i>
+          </div>
+          <div class="messages-chat">
+            {% if messages %}
+              {% for msg in messages %}
+                {% if msg.user_id != user.id %}
+                  <div class="message text-only">
+                    <p class="text">{{ msg.text }}</p>
+                  </div>
+                  {% if not messages[loop.index0+1] or messages[loop.index0+1].user_id == user.id %}
+                    {% set date = '' %}
+                  <p class="time"> {{ get_date_str(msg.date) }}</p>
+                  {% endif %}
+                {% else %}
+                  <div class="message text-only">
+                    <div class="response">
+                      <p class="text">{{ msg.text }}</p>
+                    </div>
+                  </div>
+                  {% if not messages[loop.index0+1]  or messages[loop.index0+1].user_id != user.id %}
+                  <p class="response-time time"> {{ get_date_str(msg.date) }}</p>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          </div>
+
+          <div class="footer-chat">
+            <form method="POST">
+              <i class="icon fa fa-smile-o clickable" style="font-size:25pt;" aria-hidden="true"></i>
+              <input name="message" type="text" class="write-message" placeholder="Type your message here" autofocus/>
+              <button type="submit" class="send fa fa-paper-plane-o"></button>
+            </form>
+          </div>
+
+        </section>
+
+        {% endif %}
+
+      </div>
+    </div>
+
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='inbox.js') }}"
+    ></script>
+
+  </body>
+</html>
+

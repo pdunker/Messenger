@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/style_login.css">
+    <title>Platform</title>
+  </head>
+
+  <body>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="container bg-gradient">
+
+      <h2>Register</h2>
+
+      <form class="with-padding" method="POST">
+
+        <div class="form-control">
+          <input type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            required
+          />
+          <label for="name">Username</label>
+        </div>
+
+        <div class="form-control">
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            required
+          />
+          <label for="password">Password</label>
+        </div>
+
+        <button type="submit" class="btn">Register</button>
+        <p></p>
+      </form>
+
+    </div>
+
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='wave_effect.js') }}"
+    ></script>
+
+  </body>
+</html>
